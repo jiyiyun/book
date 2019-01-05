@@ -423,3 +423,121 @@ echo "echo -e "启用反斜杠转义解释""
 echo "echo默认把\n不解释直接输出为\n而不是换行，加-e就会对反斜杠解释"
 ```
 
+```shell
+$ cat function_debug.sh 
+#!/bin/bash
+
+#filename function_debug.sh
+
+function DEBUG()
+{
+    [ "$_DEBUG" == "on" ] && $@ || :
+}
+
+for i in {1..10}
+do
+	DEBUG echo "I is $i"
+done
+```
+```txt
+$ _DEBUG=on ./function_debug.sh 
+I is 1
+I is 2
+I is 3
+I is 4
+I is 5
+I is 6
+I is 7
+I is 8
+I is 9
+I is 10
+```
+-x 输出脚本执行过的每一行
+set -x  在执行时显示参数和命令
+set +x  禁止调试
+set -v  当命令进行读取时显示输入
+set +v  禁止打印输入
+
+函数和参数
+---
+
+```txt
+函数和别名最大的差异是函数参数可以在函数体中任意位置上使用，而别名只能将参数放在命令尾部
+
+函数定义
+function fname()
+{
+    statements;
+}
+
+或者
+fname()
+{
+    statements;
+}
+
+甚至是
+fname() { statement; }
+
+函数参数可以按位置访问
+fname arg1 arg2 ;
+fname()
+{
+    echo $1,$2;
+    echo "$@";
+    echo "$*";
+    return 0;
+}
+
+$0      脚本名称
+$1      第一个参数
+$2      第二个参数
+$n      第n个参数
+$@      被扩展成"$1","$2","$3"等
+$*      被扩展成“$1c$2c$3”,其中c是IFS的第一个字符
+$@要比$*用的多，由于“$*” 将所有参数当作单个字符串，因此很少用
+
+递归函数
+调用自身的函数，例如F() { echo $1;F hello; sleep 1; }
+Fork_bomb
+:() { :|:& };:
+可以写成
+:()            :是函数名称
+{
+    :|:&;      调用自己，放入后台执行
+}
+:               执行函数:
+
+可以通过修改/etc/security/limits.conf中的nproc来限制生成的最大进程数
+hard nproc 100    限制最大生成进程数为100
+
+导出函数
+export -f fname
+
+
+$ cat showArgs.sh 
+#!/bin/bash
+
+#filename showArgs.sh
+
+for i in `seq 1 $#`
+do
+    echo $i is $1
+    shift
+done
+
+$ ./showArgs.sh a b c d
+1 is a
+2 is b
+3 is c
+4 is d
+
+man bash
+       shift [n]
+              The  positional parameters from n+1 ... are renamed to $1 ....  Parameters represented by the num‐
+              bers $# down to $#-n+1 are unset.  n must be a non-negative number less than or equal to $#.  If n
+              is  0, no parameters are changed.  If n is not given, it is assumed to be 1.  If n is greater than
+              $#, the positional parameters are not changed.  The return status is greater than  zero  if  n  is
+              greater than $# or less than zero; otherwise 0.
+shift是bash关键字
+```
