@@ -306,9 +306,10 @@ command |tee file1 file2 | OtherCommand
 将文件重定向到命令<
 ---
 
+```txt
 将文件重定向到命令和重定向相反
 richard@richard-PC:/tmp$ cat command.sh 
-
+```
 ```shell
 #!/bin/bash
 
@@ -316,6 +317,7 @@ cat<<EOF>log.txt
 This is a generated file
 EOF
 ```
+```txt
 richard@richard-PC:/tmp$ chmod a+x command.sh 
 richard@richard-PC:/tmp$ ./command.sh 
 richard@richard-PC:/tmp$ cat log.txt 
@@ -349,8 +351,12 @@ var1 var2 var3 var4
 打印数组元素个数
 richard@richard-PC:/tmp$ echo ${#array[@]}
 4
+```
 
 别名alias
+---
+
+```txt
 alias new_command='command sequence'
 例如
 alias install='sudo apt-get install'
