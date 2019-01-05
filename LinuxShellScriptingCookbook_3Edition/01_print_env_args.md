@@ -1,6 +1,7 @@
 chapter 1 第一章
 ---
 
+```txt
 问：怎样查看当前使用的那个shell
 richard@richard-PC:$ echo $0
 /bin/bash
@@ -41,10 +42,12 @@ richard@richard-PC:$ echo -e "\e[1;31m This is red text \e[0m"
  This is red text
 \e[1;31m是一个转义符，将颜色设置成红色
 可以通过man console_codes查看相关文档
+```
 
 使用变量和环境变量
 ---
 
+```txt
 $ env 或者printenv查看当前环境变量
 查看进程环境变量
 richard@richard-PC:$ cat /proc/$PID/environ
@@ -77,10 +80,12 @@ shell通过空格来分割单词，要加花括号
 
 richard@richard-PC:$ echo $PATH
 /home/richard/.pyenv/shims:/home/richard/.pyenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/sbin:/usr/sbin
+```
 
 获取字符串长度length=$(#var)
 ---
 
+```txt
 richard@richard-PC:$ var=123
 richard@richard-PC:$ echo ${#var}
 3
@@ -102,10 +107,12 @@ Type "help", "copyright", "credits" or "license" for more information.
 richard@richard-PC:$ var=123132sfsds
 richard@richard-PC:$ echo ${#var}
 11
+```
 
 修改bash默认提示字符串(username@hostname:~$)
 ---
 
+```txt
 默认的提示字符串在~/.bashrc中设置
 设置history大小
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
@@ -118,10 +125,12 @@ PS1="PROMPT>"
 尽量不要修改系统环境变量
 
 HISTFILESIZE=2000
+```
 
 使用shell进行数学运算
 ---
 
+```txt
 bash 使用let () [] 工具expr 和bc执行数学运算
 richard@richard-PC:/tmp$ num1=3
 richard@richard-PC:/tmp$ num2=4
@@ -154,11 +163,12 @@ expr: 语法错误
 richard@richard-PC:/tmp$ expr 10 \* 3
 30
 注意使用expr在乘除运算时要用转义符号\,否则一直报错
----
+```
 
 expr能做的运算
 ---
 
+```txt
   ARG1 | ARG2       若ARG1 的值不为0 或者为空，则返回ARG1，否则返回ARG2
   ARG1 & ARG2       若两边的值都不为0 或为空，则返回ARG1，否则返回 0
   ARG1 < ARG2       ARG1 小于ARG2
@@ -181,10 +191,11 @@ expr能做的运算
   length STR 返回字符串STR的数值长度 
   + TOKEN 将TOKEN解释成字符串，即使是个关键字 
   (EXPRESSION) 返回EXPRESSION的值
-
+```
 echo let expr默认只能进行整数运算，小数浮点数要用bc
 ---
- 
+
+```txt
 richard@richard-PC:/tmp$ echo "4 * 0.56"|bc
 2.24
 richard@richard-PC:/tmp$ echo "scale=2;22/7"|bc
@@ -195,11 +206,12 @@ richard@richard-PC:/tmp$ echo "10*10"|bc
 100
 richard@richard-PC:/tmp$ echo "2^10"|bc
 1024
-
+```
 
 使用awk(可已进行浮点数计算)
 ---
 
+```txt
    var=1
    var=`echo "$var 1"|awk '{printf("%g",$1*$2)}'`
    echo $var
@@ -214,10 +226,12 @@ richard@richard-PC:/tmp$ echo "2^10"|bc
    var=`echo "$var 2"|awk '{printf("%g",sin($1/$2))}'`
    echo $var
    输出结果为1
+```
 
 文件描述重定向
 ---
 
+```txt
 0  stdin   标准输入
 1  stdout  标准输出
 2  stderr  标准错误
@@ -268,10 +282,11 @@ ls: 无法访问'+': 没有那个文件或目录
 richard@richard-PC:/tmp$ cat stdin.txt 
 /tmp
 现在好了
-
+```
 将stdout 1 和stderr 2重定向到同一个文件中
 ---
 
+```txt
 ichard@richard-PC:/tmp$ ls + >allout.txt 2>&1|| date >> allout.txt 2>&1
 richard@richard-PC:/tmp$ cat allout.txt 
 ls: 无法访问'+': 没有那个文件或目录
@@ -286,26 +301,33 @@ tee命令可以既将输出重定向到文件，又能将数据重定向到stdou
 command |tee file1 file2 | OtherCommand
 
 默认情况下tee会覆盖文件，使用-a 追加模式
+```
 
 将文件重定向到命令<
 ---
 
 将文件重定向到命令和重定向相反
 richard@richard-PC:/tmp$ cat command.sh 
+
+```shell
 #!/bin/bash
 
 cat<<EOF>log.txt
 This is a generated file
 EOF
-
+```
 richard@richard-PC:/tmp$ chmod a+x command.sh 
 richard@richard-PC:/tmp$ ./command.sh 
 richard@richard-PC:/tmp$ cat log.txt 
 This is a generated file
 
 出现在cat <<EOF>log.txt 与下一个EOF之间的所有文本被当作stdin数据
+```
 
 数组
+---
+
+```txt
 bash 4.0以上版本才支持关联数组
 richard@richard-PC:/tmp$ array_var=(test1 test2 test3 test4)
 richard@richard-PC:/tmp$ echo ${array_var[0]}
@@ -354,10 +376,12 @@ $ \command
 用alias查看当前定义的所有别名
 richard@richard-PC:/tmp$ alias
 alias ls='ls --color=auto'
+```
 
 采集终端信息(行数，列数，密码等)
 ---
 
+```txt
 tput  和 stty是 终端处理工具
 
 richard@richard-PC:/tmp$ tput cols
@@ -369,6 +393,9 @@ xterm with 256 colors
 光标移动到坐标(100,100)处
 richard@richard-PC:/tmp$ tput cup 100 100
 richard@richard-PC:$ cat password.sh 
+```
+
+```shell
 #!/bin/bash
 
 #file name password.sh
@@ -384,9 +411,9 @@ echo
 echo Password
 read Password
 echo -e "password = $password\nPassword = $Password"
-
+	
 echo -e "stty 命令的选项-echo禁止将输出发送到终端，echo则默认允许输出到终端"
 echo "echo -e "启用反斜杠转义解释""
 echo "echo默认把\n不解释直接输出为\n而不是换行，加-e就会对反斜杠解释"
-
+```
 
