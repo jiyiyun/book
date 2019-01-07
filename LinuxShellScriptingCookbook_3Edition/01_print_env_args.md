@@ -540,4 +540,141 @@ man bash
               $#, the positional parameters are not changed.  The return status is greater than  zero  if  n  is
               greater than $# or less than zero; otherwise 0.
 shift是bash关键字
+shift命令用于对参数的移动(左移)，通常用于在不知道传入参数个数的情况下依次遍历每个参数然后进行相应处理（常见于Linux中各种程序的启动脚本）。
+
+示例1:依次读取输入的参数并打印参数个数：
+run.sh:
+#!/bin/bash
+while [ $# != 0 ];do
+echo "第一个参数为：$1,参数个数为：$#"
+shift
+done
+
+输入如下命令运行：run.sh a b c d e f
+
+结果显示如下：
+第一个参数为：a,参数个数为：6
+第一个参数为：b,参数个数为：5
+第一个参数为：c,参数个数为：4
+第一个参数为：d,参数个数为：3
+第一个参数为：e,参数个数为：2
+第一个参数为：f,参数个数为：1
+
+从上可知 shift(shift 1) 命令每执行一次，变量的个数($#)减一（之前的$1变量被销毁,之后的$2就变成了$1），而变量值提前一位。
+
+同理，shift n后，前n位参数都会被销毁，比如：
+
+输入5个参数： abcd e
+
+那么$1=a,$2=b,$3=c,$4=d,$5=e,执行shift 3操作后，前3个参数a、b、c被销毁，就剩下了2个参数：d,e（这时d=$1,e=$2，其中d由$4—>$1,e由$5—>$2）
+
+原文：https://blog.csdn.net/zhu_xun/article/details/24796235 
+
 ```
+
+将第一个命令输出发送给第二个命令(管道pipe|)
+---
+
+```txt
+cmd1 | cmd2 | cmd3
+
+例如
+cmd_output=`ls | cat -n`
+echo $cmd_output
+
+```
+
+在不按下回车键的情况下读取n个字符(对于银行卡输入6位密码)
+---
+
+```txt
+read命令提供了一种不需要按回车键的方法
+
+read -n number_of_chars variable_name
+
+richard@richard-PC:~$ read -n 6 var
+123456
+richard@richard-PC:~$ 
+richard@richard-PC:~$ echo $var
+123456
+
+当命令在子shell中执行时，不会对当前shell造成任何影响，所有改变仅限子shell内
+```
+无回显的方式读取密码(通过回车结束输入)
+---
+
+```txt
+richard@richard-PC:~$ read -s var
+richard@richard-PC:~$ echo $var
+123456789
+```
+
+显示read提示信息
+---
+
+```txt
+richard@richard-PC:~$ read -p "Enter intput:" var
+Enter intput:hello
+richard@richard-PC:~$ echo $var
+hello
+```
+
+限定时间内读取输入
+---
+
+```txt
+read -t timeout var
+
+read -t 2 var
+
+``
+
+特定结束定界符作为输入行结束
+---
+
+```txt
+read -d delim_char var
+
+richard@richard-PC:~$ read -d ":" var
+hello:richard@richard-PC:~$ echo $var
+hello
+
+```
+
+```txt
+
+$ read --help
+read: read [-ers] [-a 数组] [-d 分隔符] [-i 缓冲区文字] [-n 读取字符数] [-N 读取字符数] [-p 提示符] [-t 超时] [-u 文件描述符] [名称 ...]
+    从标准输入读取一行并将其分为不同的域。
+
+    选项：
+      -a array	将词语赋值给 ARRAY 数组变量的序列下标成员，从零开始。
+      -d delim	持续读取直到读入 DELIM 变量中的第一个字符，而不是换行符
+      -e	在一个交互式 shell 中使用 Readline 获取行
+      -i text	使用 TEXT 文本作为 Readline 的初始文字
+      -n nchars	读取 nchars 个字符之后返回，而不是等到读取换行符。
+    		但是分隔符仍然有效，如果遇到分隔符之前读取了不足 nchars 个字符。
+      -N nchars	在准确读取了 nchars 个字符之后返回，除非遇到文件结束符或者读超时，
+    		任何的分隔符都被忽略
+      -p prompt	在尝试读取之前输出 PROMPT 提示符并且不带
+    		换行符
+      -r	不允许反斜杠转义任何字符
+      -s	不显示终端的任何输入
+      -t timeout	如果在 TIMEOUT 秒内没有读取一个完整的行则超时并且返回失败。
+    		TMOUT 变量的值是默认的超时时间。
+    		TIMEOUT 可以是小数。如果 TIMEOUT 是 0，那么仅当在指定的文件描述符上
+    		输入有效的时候，read 才返回成功。
+    		如果超过了超时时间，则返回状态码大于 128
+      -u fd	从文件描述符 FD 中读取，而不是标准输入
+
+```
+```txt
+面向列表的for循环
+for var in list;
+do
+    commands;
+done
+
+
+
+
