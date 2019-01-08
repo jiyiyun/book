@@ -125,8 +125,26 @@ $* 和 $@ 都是将参数一个一个返回
 ge      大于等于   great  equate
 le      小于等于   litter equate
 ```
+七、字符类
+---
 
-七、linux 文件权限 s 权限和 t 权限解析
+```txt
+alnum  字母数字
+alpha  字母
+cntrl  控制(非打印)字符
+digit  数字
+graph  图形字符
+lower  小写字母
+upper  大写字母
+print  可打印字符
+punct  标点符号
+space  空白字符
+xdigit 十六进制字符 
+[0-9][a-z][A-Z]
+```
+
+
+八、linux 文件权限 s 权限和 t 权限解析
 ---
 
 ```txt
