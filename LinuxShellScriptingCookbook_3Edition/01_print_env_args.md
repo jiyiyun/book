@@ -675,6 +675,40 @@ do
     commands;
 done
 
+-gt
+-lt
+-ge
+-lt
 
+-a 是逻辑与操作符，-o是逻辑或操作符
+[ $var1 -ne 0 -a $var2 -gt 2 ]   逻辑与-a
+[ $var1 -ne 0 -o $var2 -gt 2 ]   逻辑或-o
 
+文件系统测试各种文件系统相关属性
+-f  文件或路径
+-x  可执行
+-d  目录
+-e  存在
+-b  块文件
+-c  字符文件
+-w  可写
+-r  可读
+-L  符号链接
 
+-n  str 长度为不为0
+-z  str 长度为0
+字符串比较
+[[ $str1 = $str2 ]]  相当于str1等于str2时返回为真
+[[ $str1 == $str2 ]] 检查是否相同
+
+测试两个字符串不同
+[[ $str1 != $str2 ]] 不相同返回为真
+
+[[ $str1 > $str2 ]]
+[[ $str1 < $str2 ]]
+
+if [[ -n $str1 ]] && [[ -z $str2 ]];
+    then
+        commands;
+    fi
+```
