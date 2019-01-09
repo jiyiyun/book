@@ -214,6 +214,20 @@ tr [:class:] [:class:]
 如
 tr '[:lower:]' '[:upper:]'
 
+man tr
+       -c, -C, --complement
+              use the complement of SET1
+
+       -d, --delete
+              delete characters in SET1, do not translate
+
+       -s, --squeeze-repeats
+              replace each sequence of a repeated character that is listed  in
+              the last specified SET, with a single occurrence of that charac‐
+              ter
+
+       -t, --truncate-set1
+              first truncate SET1 to length of SET2
 ```
 
 校验md5sum sha256
@@ -235,5 +249,139 @@ rich@R:~$ cat test_md5sum.md5
 通常光盘等大文件需要校验完整性
 
 对目录进行校验md5deep 或sha1deep,这两个命令默认没有需要安装md5deep软件包
+md5deep -rl directory_path > directory.md5
+-r 递归遍历
+-l 使用相对路径，默认情况下md5deep会输出绝对路径
+
+$find directory_path -type f -print0 } xargs -0 md5sum >>directory.md5
+核实
+md5sum -c directory.md5
+生成目录校验文件的时候一定要加-l，生成相对文件路径，
+默认生成绝对路径校验，否则会造成文件路径改变校验失效
+
+shadow-like散列(加盐散列salted hash)
+
+$openssl passwd -l -salt SALT_STRING PASSWOD
+将SALT_STRING更换为随机字符串，将PASSWORD替换成设定的密码
+
+```
+
+加密工具与散列 crypt gpg base64
+---
+
+```txt
+crypt命令一般没有安装需要手动安装
+$crypt <input_file >output_file
+
+如果添加加密要口令
+$crypt PASSPHRASE <input_file >encrypted_file
+ 解密
+$crypt PASSPHRASE -d <encrypted_file >output_file
+
+gpg加密GNU privacy guard
+gpg -c filename
+解密
+gpg filename.gpg
+
+rich@R:~$ gpg -c test.txt 
+gpg: keybox '/home/rich/.gnupg/pubring.kbx' created
+rich@R:~$ ls
+test_md5sum.md5  test.txt test.txt.gpg
+rich@R:/tmp$ gpg test.txt.gpg 
+gpg: WARNING: no command supplied.  Trying to guess what you mean ...
+gpg: AES256 加密过的数据
+gpg: 以 1 个密码加密
+rich@R:/tmp$ cat test.txt
+a 1
+b 2
+c 3
+
+base64加密
+rich@R:/tmp$ base64 test.txt >test.txt.base64
+rich@R:/tmp$ cat test.txt.base64 
+YSAxCmIgMgpjIDMK
+base64解密方法1
+rich@R:/tmp$ base64 -d test.txt.base64 >test2.txt
+rich@R:/tmp$ cat test2.txt 
+a 1
+b 2
+c 3
+base64解密方法2
+rich@R:/tmp$ cat test.txt.base64 | base64 -d > test3.txt
+rich@R:/tmp$ cat test3.txt 
+a 1
+b 2
+c 3
+```
+
+行排序sort uniq去重
+---
+
+```txt
+sort 和uniq可以从特定的文件或stdin中获取输入，并将输出写入stdout
+$sort file1.txt file2.txt > sorted.txt
+或
+$sort file1.txt file2.txt -o sorted.txt
+
+$sort -n file.txt       #-n 按数字排序
+$sort -r file.txt       #-r 倒序
+$sort -M month.txt      #-M 按月排序
+$sort file1.txt file2.txt |uniq    #去重
+
+工作原理
+
+一，依照键来排序(默认是按第一列排序的，如果要按照其它列可以使用-k参数)
+$sort -nrk 1 data.txt   #按照第一列排序
+
+$sort -k 2 data.txt    #按照第2列进行排序
+
+uniq 通常用在排序过的数据
+uniq -c 统计重复的次数
+uniq -d 输出重复的行
+-s 指定跳过前N个字符
+-w 指定用于比较的最大字符数
+
+0值字节终止符
+我们将命令输出stdout作为xargs命令输入时，最好为输出的每行添加一个0值字节符zero-byte
+使用uniq命令的输入作为xargs数据源也如此，如果没有0值终止符，xargs默认使用空格分割参数
+如this is a line会被当做4个不同参数，如果使用0值终止符，\0就会被当做终止符，
+-z 选项可以生成0值字节终止符的输出
+$uniq -z file.txt
+删除file.txt中指定的文件，有-0零值终止符，文件名包含空格也可以正常删除了
+$uniq -z file.txt |xargs -0 rm
+```
+
+文件分割split
+---
+
+```txt
+$split -b 10k data.file
+
+大小单位k,M,G c w
+
+split -l 按行分割
+-s  静默模式，没有打印输出
+-n  分割后文件名后缀的数字个数
+-f  分割后文件名前缀
+-b  指定后缀模式，文件名=前缀+后缀
+
+```
+
+多个文件名重命名rename
+---
+
+```txt
+将当前目录下的*.JPG 文件重命名为*.jpg
+$rename *.JPG *.jpg
+
+
+将空格替换成_
+$rename 's/ /_/g'
+
+转换文件名称大小写
+$rename 'y/A_Z/a-z/' *
+
+将所有后缀为*.mp3的文件移动到指定目录
+$find path -type f -name "*.mp3" -exec mv {} target_dir \;
 
 ```
