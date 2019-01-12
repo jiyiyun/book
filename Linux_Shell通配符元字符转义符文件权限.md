@@ -62,6 +62,9 @@ $$      当前shell的进程ID，对于脚本，就是脚本所在进程的ID
 $* 和 $@ 都是将参数一个一个返回
 "$*"将所有参数当做一个整体字符串返回 , "$@"将参数一个一个返回
 
+
+!!      执行上一个命令
+!n      n为数字，用history命令查看命令序列号，n就是序列号
 ```
 
 五、常用判断参数
@@ -263,18 +266,48 @@ lsattr (显示文件隐藏属性)
 https://www.cnblogs.com/kzang/articles/2673790.html
 ```
 ```txt
-man chattr
+NAME
+       chattr - change file attributes on a Linux file system
+
+SYNOPSIS
+       chattr [ -RVf ] [ -v version ] [ -p project ] [ mode ] files...
+
+DESCRIPTION
        chattr changes the file attributes on a Linux file system.
+
        The format of a symbolic mode is +-=[aAcCdDeijPsStTu].
 
-       The  operator '+' causes the selected attributes to be added to the existing attributes of the files; '-' causes them to be removed; and '=' causes them to be the only attributes that the files have.
-       The letters 'aAcCdDeijPsStTu' select the new attributes for the files: append only (a), no atime  updates(A),  compressed (c), no copy on write (C), no dump (d), synchronous directory updates (D), extent format (e), immutable (i), data journalling (j), project hierarchy (P), secure deletion (s), synchronous updates (S), no tail-merging (t), top of directory hierarchy (T), and undeletable (u).
-       The  following  attributes  are  read-only,  and  may  be listed by lsattr(1) but not modified by chattr: encrypted (E), indexed directory (I), and inline data (N).
-       Not all flags are supported or utilized by all filesystems; refer to filesystem-specific man  pages  such as btrfs(5), ext4(5), and xfs(5) for more filesystem-specific details.
+       The  operator  '+'  causes  the  selected attributes to be added to the
+       existing attributes of the files; '-' causes them to  be  removed;  and
+       '=' causes them to be the only attributes that the files have.
 
-A  file  with the 'a' attribute set can only be open in append mode for writing.  Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE capability can set or clear this attribute.
+       The  letters 'aAcCdDeijPsStTu' select the new attributes for the files:
+       append only (a), no atime updates (A), compressed (c), no copy on write
+       (C), no dump (d), synchronous directory updates (D), extent format (e),
+       immutable (i), data journalling  (j),  project  hierarchy  (P),  secure
+       deletion  (s),  synchronous  updates  (S),  no tail-merging (t), top of
+       directory hierarchy (T), and undeletable (u).
 
-A file with the 'i' attribute cannot be modified: it cannot be deleted or renamed, no link can be created to  this  file,  most of the file's metadata can not be modified, and the file can not be opened in write mode.  Only the superuser or a process possessing the CAP_LINUX_IMMUTABLE capability  can  set  or  clear this attribute.
+       The following attributes are read-only, and may be listed by  lsattr(1)
+       but  not  modified by chattr: encrypted (E), indexed directory (I), and
+       inline data (N).
+
+       Not all flags are supported or utilized by all  filesystems;  refer  to
+       filesystem-specific man pages such as btrfs(5), ext4(5), and xfs(5) for
+       more filesystem-specific details.
+
+OPTIONS
+       -R     Recursively change attributes of directories and their contents.
+
+       -V     Be verbose with chattr's output and print the program version.
+
+       -f     Suppress most error messages.
+
+       -v version
+              Set the file's version/generation number.
+
+       -p project
+              Set the file's project number.
 ```
 
 ```txt
