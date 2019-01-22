@@ -349,7 +349,9 @@ rich@R:~$ stat github/book_note/Linux_Shell通配符元字符转义符文件权�
 ```
 
 last用户登录记录
----txt
+---
+
+```txt
 rich@R:~$ last
 rich     tty1         :0               Tue Jan 22 17:30   still logged in
 reboot   system boot  4.15.0-29deepin- Tue Jan 22 17:29   still running
