@@ -317,3 +317,44 @@ OPTIONS
 2、在一个共享目录下，每个用户只能修改删除自己创建的，不能修改删除其它用户创建的文件，怎么实现？
    答：给目录添加t位属性 chmod +t filename
 ```
+
+
+atime mtime ctime
+---
+
+```txt
+在Linux下一个文件也有三种时间属性：（与windows不同的是linux没有创建时间，而多了个访问时间）
+1>访问时间（access time 简写为atime）
+2>修改时间（modify time 简写为mtime）
+3>状态修改时间(change time 简写为ctime)
+
+关于Linux底下三种时间的简单介绍：
+atime:（access time）显示的是文件中的数据最后被访问的时间，比如系统的进程直接使用或通过一些命令
+       和脚本间接使用。（执行一些可执行文件或脚本）
+mtime: （modify time）显示的是文件内容被修改的最后时间，比如用vi编辑时就会被改变。（也就是Block的内容）
+ctime: （change time）显示的是文件的权限、拥有者、所属的组、链接数发生改变时的时间。当然当内容
+       改变时也会随之改变（即inode内容发生改变和Block内容发生改变时）
+查看这三种时间,使用的命令为：stat filename
+原文：https://blog.csdn.net/wodeqingtian1234/article/details/53975744 
+
+rich@R:~$ stat github/book_note/Linux_Shell通配符元字符转义符文件权限.md 
+  文件：github/book_note/Linux_Shell通配符元字符转义符文件权限.md
+  大小：14635     	块：32         IO 块：4096   普通文件
+设备：801h/2049d	Inode：803943      硬链接：1
+权限：(0644/-rw-r--r--)  Uid：( 1000/    rich)   Gid：( 1000/    rich)
+最近访问：2019-01-22 17:38:38.223488467 +0800
+最近更改：2019-01-12 10:36:31.096884300 +0800
+最近改动：2019-01-12 10:36:31.096884300 +0800
+创建时间：-
+```
+
+last用户登录记录
+---txt
+rich@R:~$ last
+rich     tty1         :0               Tue Jan 22 17:30   still logged in
+reboot   system boot  4.15.0-29deepin- Tue Jan 22 17:29   still running
+rich     tty1         :0               Sun Jan 20 09:15 - 12:06  (02:51)
+reboot   system boot  4.15.0-29deepin- Sun Jan 20 09:14 - 12:06  (02:52)
+rich     tty1         :0               Sat Jan 19 17:17 - 20:15  (02:58)
+
+```
