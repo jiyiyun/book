@@ -72,47 +72,26 @@ $* 和 $@ 都是将参数一个一个返回
 
 ```txt
 -a file exists.
-
 -b file exists and is a block special file.
-
 -c file exists and is a character special file.
-
 -d file exists and is a directory.
-
 -e file exists (just the same as -a).
-
 -f file exists and is a regular file.
-
 -g file exists and has its setgid(2) bit set.
-
 -G file exists and has the same group ID as this process.
-
 -k file exists and has its sticky bit set.
-
 -L file exists and is a symbolic link.
-
 -n string length is not zero.
-
 -o Named option is set on.
-
 -O file exists and is owned by the user ID of this process.
-
 -p file exists and is a first in, first out (FIFO) special file or named pipe.
-
 -r file exists and is readable by the current process.
-
 -s file exists and has a size greater than zero.
-
 -S file exists and is a socket.
-
 -t file descriptor number fildes is open and associated with a terminal device.
-
 -u file exists and has its setuid(2) bit set.
-
 -w file exists and is writable by the current process.
-
 -x file exists and is executable by the current process.
-
 -z string length is zero.
 ```
 
@@ -145,9 +124,70 @@ space  空白字符
 xdigit 十六进制字符 
 [0-9][a-z][A-Z]
 ```
+八、Linux shell 中$() ` `，${}，$[] $(())，[ ] (( )) [[ ]]作用与区别
+---
 
+```txt
+1 $()
+在bash shell中，$() 与` (反引号,tab键上面那个) 都是用来做命令替换用(command substitution)的
+例如 version=$(uname -r) 和version=`uname -r` 都是version得到内核版本号
 
-八、linux 文件权限 s 权限和 t 权限解析
+各自优缺点
+1) ` (反引号,tab键上面那个)，可以在全部unix shell中通用，若写成shell script，其移植性比较高。但是反引号容易看错或者打错。
+2) $()并不是所有shell都支持
+
+2 ${} 变量替换
+${}用于变量替换，一般情况下，$var 与${var}没啥不一样，但是用${}会比较精确的界定变量名称的范围，比如
+
+rich@R:~$ A=B
+rich@R:~$ echo $AB
+
+rich@R:~$ echo ${A}B
+BB
+rich@R:~$
+
+3 $[] $(())
+它们是一样的，都是进行数学运算的。支持+ - * / % 分别为加 减 乘 除 取模 ，但是注意bash只能做整数运算，对于浮点数是当作字符串处理的
+rich@R:~$ a=1;b=2;c=3
+rich@R:~$ echo $(( a+b*c ))
+7
+rich@R:~$ echo $(( (a+b)/c ))
+1
+rich@R:~$ echo $(( (a*c)%b ))
+1
+在$((  ))中的变量名称，可以在其前面加$符号来替换，也可以不用，如：
+rich@R:~$ echo $(( $a + $b * $c ))
+7
+
+4 [] 中括号
+即为test命令的一种形式，但是注意：
+1)必须在[  ]内部两边加空格，否则报错
+rich@R:~$ echo $[ a + b + c ]
+6
+2)test命令使用标准数学比较符号来表示字符串比较，而用文本符号来表示数值的比较
+3) 大于符号或小于符号必须要转义，否则会被解释成重定向
+
+5 (()) 及  [[]]
+它们分别是[]的针对数学比较表达式和字符串表达式的加强版，其中(())不需要再将表达式里面的大小符号转义，除了可以使用标准的数学运算符外，还增加一下符号
+
+符号   描述
+val++  后增
+val--  后减
+++val  先增
+--val  先减
+!      逻辑求反
+~      位求反
+**     幂运算
+<<     左位移
+>>     右位移
+&      位布尔和
+|      位布尔或
+&&     逻辑和
+||     逻辑或
+
+源文章https://blog.csdn.net/ai_xiangjuan/article/details/82082391
+```
+九、linux 文件权限 s 权限和 t 权限解析
 ---
 
 ```txt
@@ -359,4 +399,24 @@ rich     tty1         :0               Sun Jan 20 09:15 - 12:06  (02:51)
 reboot   system boot  4.15.0-29deepin- Sun Jan 20 09:14 - 12:06  (02:52)
 rich     tty1         :0               Sat Jan 19 17:17 - 20:15  (02:58)
 
+```
+
+设置ssh相关参数
+---
+
+```txt
+#Port 22
+#PermitRootLogin prohibit-password
+#PermitEmptyPasswords no
+#MaxAuthTries 6
+#MaxSessions 10
+#ClientAliveInterval 0    设置ssh保持时间
+#ClientAliveCountMax 3    设置允许超时的次数
+```
+```txt
+ssh超时断开设置
+$TMOUT系统环境变量：
+#vi /etc/profile
+在最后一行增加
+export TMOUT=1800（单位秒）
 ```
