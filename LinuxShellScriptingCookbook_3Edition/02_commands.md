@@ -2,7 +2,11 @@ chapter 2 commands
 ===
 
 ```txt
-cat -s file   #输出的时候删除空白行
+cat -s FILE_NAME   #输出的时候删除空白行
+stat FILE_NAME     #查询文件的atime mtime ctime
+getfacl FILE_NAME  #查询文件所属owner,group权限
+df -i              #查询inode使用量，剩余量
+ls -li  FIME_NAME  #查看文件inode值
 ```
 
 find查找
