@@ -4,34 +4,37 @@ redis全局命令、数据结构和内部编码、单线程命令处理机制
 
 redis 5 种数据结构，它们是键值对中的值，对于键来说有一些通用的命令
 
-1. 查看所有键
-  keys *
+1. 查看所有键 keys *
+2. 键的总数 dbsize
 
-2. 键的总数
-  dbsize
-  dbsize命令返回当前数据库中键的总数
-  dbsize命令在计算键总数的时候不会遍历所有键，而是直接获取redis内置键总数变量，所以dbsize命令的时间复杂度是O(1),而keys命令会遍历所有键，它的时间复杂度是O(n),当redis保存了大量键时，线上环境禁止使用keys *
+dbsize命令返回当前数据库中键的总数,dbsize命令在计算键总数的时候不会遍历所有键，而是直接获取redis内置键总数变量，所以dbsize命令的时间复杂度是O(1),而keys命令会遍历所有键，它的时间复杂度是O(n),当redis保存了大量键时，线上环境禁止使用keys *
 
-3. 检查键是否存在
- exists key
-
+3. 检查键是否存在 exists key
 4. 删除键
+```txt
  del key [key ...]
+```
 返回结果是成功删除的个数，如果键不存在，则返回0
 
-5. 键过期
- expire key seconds
+5. 键过期 expire key seconds
+
 redis支持对键添加时间过期，当超过过期时间后删除键
+```txt
 127.0.0.1:6380> set expire_time test
 OK
 127.0.0.1:6380> expire expire_time 10
 (integer) 1
 127.0.0.1:6380> get expire_time
 (nil)
+```
+
 可以使用ttl命令查询键剩余时间，它有3中返回值
+
 - 大于等于0的整数：剩余过期时间
 - -1:键没有设置过期时间
 - -2:键不存在
+
+```txt
 127.0.0.1:6380> set expire time
 OK
 127.0.0.1:6380> expire expire 20
@@ -44,8 +47,9 @@ OK
 (integer) -2                 #键已经过期删除
 127.0.0.1:6380> get expire
 (nil)                        #键已经不存在
-
+```
 6. 键的数据结构类型
+```txt
  type key
 127.0.0.1:6380> rpush mylist a b c d e f g
 (integer) 7
@@ -59,6 +63,7 @@ list
 5) "e"
 6) "f"
 7) "g"
+```
 获取list片段LRANGE key start stop ,0表示第一个索引，-1表示最后一个索引
 
 2.1.2 数据结构和内部编码
@@ -132,8 +137,9 @@ OK                          #设置test 值为set
 OK                          #set xx 设置成功
 127.0.0.1:6380> get test
 "001"
-setnx 和setxx在实际中应用场景：如果多个客户端同时执行setnx key value,根据setnx特性只有一个客户端能设置成功，setnx可以作为分布式锁的一种实现方案
 ```
+setnx 和setxx在实际中应用场景：如果多个客户端同时执行setnx key value,根据setnx特性只有一个客户端能设置成功，setnx可以作为分布式锁的一种实现方案
+
 2. 获取值get key
 ```txt
 127.0.0.1:6380> get hello
