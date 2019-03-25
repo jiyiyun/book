@@ -29,8 +29,7 @@ git checkout 创建分支(修改bug或者测试用)
 git branch 查看分支
 git merge 合并分支
 git status 检查git仓库状态
-
-
-
-
+git log 生成一份报告
 ```
+
+fossil和git类似
